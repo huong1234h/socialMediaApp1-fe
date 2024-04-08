@@ -1,0 +1,120 @@
+@import "../../style.scss";
+
+.leftBar {
+  @include themify($themes) {
+    flex: 3;
+    position: sticky;
+    top: 70px;
+    width: 110%;
+    
+    height: calc(100vh - 70px);
+    overflow: scroll;
+    
+    background-color: themed("bgSoft");
+    color: themed("textColor");
+    font-family: monospace;
+
+    @include mobile{
+      display: none;
+    }
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    .container {
+      padding: 20px;
+      
+
+      hr {
+        margin: 20px 0px;
+        border: none;
+        height: 0.5px;
+        background-color: themed("border");
+      }
+
+      .menu {
+        padding:20px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        
+        margin-bottom: 16px;
+        width:90%;
+        
+        background-color: themed('bg');
+        border-radius: 15px;
+        -webkit-box-shadow: 0px 0px 15px 1px rgba(0, 0, 0, 0.09);
+        -moz-box-shadow: 0px 0px 15px 1px rgba(0, 0, 0, 0.09);
+        box-shadow: 0px 0px 15px 1px rgba(0, 0, 0, 0.09);
+
+        span {
+          font-size: 12px;
+        }
+
+        .user {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+
+          img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+          }
+
+          .nUser{
+            font-size:16px;
+            font-weight: 550;
+            letter-spacing: 1px;
+            padding-bottom:2px;
+          }
+          .wUser{
+            font-weight: 500;
+            font-size: 12px;
+            color:themed('textColorSoft');
+            letter-spacing: 0;
+          }
+        }
+
+        .item {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          transition: all .2s linear;
+          height:fit-content;
+          padding:10px;
+          color:themed('textColor');
+          position:relative;
+          border-radius: 10px;
+          cursor: pointer;
+
+          &:hover{
+            background-color:themed('bgInput');
+          }
+
+          img {
+            width: 30px;
+          }
+
+          span {
+            font-size: 14px;
+          }
+          .numerous{
+            font-size: 12px;
+            padding:3px;
+            color:hsl(255,50%,90%);
+            font-weight: 550;
+            position: absolute;
+            text-align: center;
+            background-color: red;
+            border-radius: 50% ;
+            left:27px;
+            top:5px;
+          }
+        }
+      }
+    }
+  }
+}
