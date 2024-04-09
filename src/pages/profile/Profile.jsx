@@ -17,6 +17,7 @@ import "./profile.scss";
 const Profile = () => {
   const [openUpdate, setOpenUpdate] = useState(false);
   const { currentUser } = useContext(AuthContext);
+  console.log("currentUser Profile:",currentUser);
 
   const userId = parseInt(useLocation().pathname.split("/")[2]);
 
@@ -91,11 +92,11 @@ const Profile = () => {
                 </div>
                 {rIsLoading ? (
                   "Đang tải..."
-                ) : userId === currentUser.id ? (
+                ) : userId === currentUser?.id ? (
                   <button onClick={() => setOpenUpdate(true)}>Cập nhật</button>
                 ) : (
                   <button onClick={handleFollow}>
-                    {relationshipData.includes(currentUser.id)
+                    {relationshipData.includes(currentUser?.id)
                       ? "Đang theo dõi"
                       : "Theo dõi"}
                   </button>

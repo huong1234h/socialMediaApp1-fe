@@ -11,7 +11,7 @@ const Notifications = ({ userId, onHidden, notification }) => {
   );
 
   
-
+  console.log(userId);
   console.log(data);
   console.log(notification);
 

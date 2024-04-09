@@ -53,7 +53,7 @@ const Messenger = () => {
     const getConversations = async () => {
       try {
         const res = await axios.get(
-          process.env.REACT_APP_BACKEND_URL + `conversations/${currentUser.id}`
+          process.env.REACT_APP_BACKEND_URL + `conversations/${currentUser?.id}`
         );
         setConversations(res.data);
       } catch (err) {
@@ -61,7 +61,7 @@ const Messenger = () => {
       }
     };
     getConversations();
-  }, [currentUser.id]);
+  }, [currentUser?.id]);
 
   useEffect(() => {
     const getReceiver = async () => {

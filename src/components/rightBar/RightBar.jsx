@@ -7,7 +7,7 @@ import "./rightBar.scss";
 
 const RightBar = () => {
   const { currentUser } = useContext(AuthContext);
-  const userId = currentUser.id;
+  const userId = currentUser?.id;
   const { isLoading, error, data } = useQuery(["users"], () =>
     makeRequest.get(`/users/${userId}`).then((res) => {
       return res.data;
