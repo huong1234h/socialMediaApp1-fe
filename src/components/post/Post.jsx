@@ -35,9 +35,9 @@ const Post = ({ post }) => {
       onSuccess: () => {
         // Invalidate and refetch
         queryClient.invalidateQueries(["likes"]);
-        if(!data.includes(currentUser?.id) && currentUser?.id != post?.userId){
+        if(!data.includes(currentUser.user.id) && currentUser.user.id != post?.userId){
           makeRequest.post("/notifications/add",{
-            senderId:currentUser?.id,
+            senderId:currentUser.user.id,
             receiverId:post?.userId,
             type:1
           })
@@ -59,7 +59,7 @@ const Post = ({ post }) => {
   );
 
   const handleLike = () => {
-    mutation.mutate(data.includes(currentUser?.id));
+    mutation.mutate(data.includes(currentUser.user.id));
   };
 
   const handleDelete = () => {
@@ -83,7 +83,7 @@ const Post = ({ post }) => {
             </div>
           </div>
           <MoreHorizIcon onClick={() => setMenuOpen(!menuOpen)} />
-          {menuOpen && post.userId === currentUser?.id && (
+          {menuOpen && post.userId === currentUser.user.id && (
             <button onClick={handleDelete}>delete</button>
           )}
         </div>
@@ -95,7 +95,7 @@ const Post = ({ post }) => {
           <div className="item">
             {isLoading ? (
               "loading"
-            ) : data.includes(currentUser?.id) ? (
+            ) : data.includes(currentUser.user.id) ? (
               <FavoriteOutlinedIcon
                 style={{ color: "red" }}
                 onClick={handleLike}

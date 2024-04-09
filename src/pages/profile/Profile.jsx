@@ -92,11 +92,11 @@ const Profile = () => {
                 </div>
                 {rIsLoading ? (
                   "Đang tải..."
-                ) : userId === currentUser?.id ? (
+                ) : userId === currentUser.user.id ? (
                   <button onClick={() => setOpenUpdate(true)}>Cập nhật</button>
                 ) : (
                   <button onClick={handleFollow}>
-                    {relationshipData.includes(currentUser?.id)
+                    {relationshipData.includes(currentUser.user.id)
                       ? "Đang theo dõi"
                       : "Theo dõi"}
                   </button>
