@@ -14,7 +14,7 @@ const LeftBar = () => {
   const { currentUser } = useContext(AuthContext);
   const [logout,setLogout] = useState(false);
   
-
+  console.log(currentUser);
   const handleOnNotification = ()=>{
     setNotification(!notification);
   }
