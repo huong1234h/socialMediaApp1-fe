@@ -31,6 +31,7 @@ export const AuthContextProvider = ({ children }) => {
 
   // Console log for debugging purposes (remove for production)
   console.log("Current User:", currentUser);
+  console.log("currentId:", currentUser?.id);
 
   return (
     <AuthContext.Provider value={{ currentUser, login }}>
