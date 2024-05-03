@@ -8,7 +8,7 @@ const CurrentPost = () => {
   const { currentUser } = useContext(AuthContext);
 
   const { isLoading, error, data } = useQuery(["posts"], () =>
-    makeRequest.get("/posts?userId=" + currentUser.user.id).then((res) => {
+    makeRequest.get("/posts?userId=" + currentUser.id).then((res) => {
       return res.data;
     })
   );

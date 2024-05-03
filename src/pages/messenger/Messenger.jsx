@@ -49,7 +49,7 @@ const Messenger = () => {
     socket.current.on("getMessage", (data) => {
       console.log(data); // Log received data
       setArrivalMessage({
-        senderId: data.senderId || currentUser.user.id, // Use senderId from data or fallback to currentUser
+        senderId: data.senderId || currentUser.id, // Use senderId from data or fallback to currentUser
         receiveUserId: data.receiveUserId,
         contentMessage: data.contentMessage,
         zoomId: data.zoomId,
@@ -67,7 +67,7 @@ const Messenger = () => {
   }, [arrivalMessage, currentChat]);
 
   useEffect(() => {
-    socket.current.emit("addUser", currentUser.user.id);
+    socket.current.emit("addUser", currentUser.id);
     socket.current.on("getUsers",(users)=>{
       setOnlineUsers(users);
     })
@@ -78,7 +78,7 @@ const Messenger = () => {
     const getConversations = async () => {
       try {
         const res = await axios.get(
-          process.env.REACT_APP_BACKEND_URL + `conversations/${currentUser.user.id}`
+          process.env.REACT_APP_BACKEND_URL + `conversations/${currentUser.id}`
         );
         setConversations(res.data);
       } catch (err) {
@@ -92,7 +92,7 @@ const Messenger = () => {
     const getReceiver = async () => {
       try {
         let receiverId =
-          currentChat.attendant1 === currentUser.user.id
+          currentChat.attendant1 === currentUser.id
             ? currentChat?.attendant2
             : currentChat?.attendant1;
         const response = await axios.get(
@@ -125,14 +125,14 @@ const Messenger = () => {
 
   const handleSendMessage = async () => {
     const sendedData = {
-      sendUserId: currentUser.user.id,
+      sendUserId: currentUser.id,
       receiveUserId: receiver?.id,
       contentMessage: message,
       zoomId: currentChat?.id,
     };
 
     socket.current.emit("sendMessage", {
-      sendUserId: currentUser.user.id,
+      sendUserId: currentUser.id,
       receiveUserId: receiver?.id,
       contentMessage: message,
       zoomId: currentChat?.id,
@@ -172,7 +172,7 @@ const Messenger = () => {
             {conversations.map((c, index) => {
               return (
                 <div onClick={() => setCurrentChat(c)} key={index}>
-                  <Conversation c={c} userId={currentUser.user.id} displayChatBox={displayChatBox} onlineUsers={onlineUsers}/>
+                  <Conversation c={c} userId={currentUser.id} displayChatBox={displayChatBox} onlineUsers={onlineUsers}/>
                 </div>
               );
             })}
@@ -213,7 +213,7 @@ const Messenger = () => {
                   return (
                     <div ref={scrollRef}>
                     <Message
-                      own={currentUser.user.id === m?.sendUserId}
+                      own={currentUser.id === m?.sendUserId}
                       m={m}
                       key={index}
                     />

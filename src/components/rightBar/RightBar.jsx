@@ -16,7 +16,7 @@ const RightBar = () => {
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [recommendUser, setRecommendUser] = useState(false);
   const [createdConversation,setCreatedConversation] = useState(false);
-  const userId = currentUser.user.id;
+  const userId = currentUser.id;
   const { isLoading, error, data } = useQuery(["users"], () =>
     makeRequest.get(`/users/${userId}`).then((res) => {
       return res.data;
@@ -24,7 +24,7 @@ const RightBar = () => {
   );
 
   useEffect(() => {
-    socket.emit("addUser", currentUser.user.id);
+    socket.emit("addUser", currentUser.id);
     socket.on("getUsers", (users) => {
       setOnlineUsers(users);
     });
@@ -46,7 +46,7 @@ const RightBar = () => {
   const handleAccessChat = async (userId) => {
     try {
       await axios.post(process.env.REACT_APP_BACKEND_URL + `conversations/add`,{
-        att1Id:currentUser.user.id,
+        att1Id:currentUser.id,
         att2Id : userId,
       });
       setCreatedConversation(true);

@@ -32,7 +32,7 @@ const Navbar = () => {
         <div className="user">
           <button type='submit'>Create</button>
           <img
-            src={"/upload/" + currentUser.user.profilePic}
+            src={"/upload/" + currentUser.profilePic}
             alt=""
           />
         </div>

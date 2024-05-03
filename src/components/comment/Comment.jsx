@@ -59,11 +59,11 @@ const Comment = ({comment,index}) => {
         await queryClient.invalidateQueries([`replyComments-${comment.id}`]);
         console.log("data: ",data);
         // Conditional notification (consider error handling)
-        if (currentUser.user.id) {
+        if (currentUser.id) {
           try {
             await makeRequest.post("/notifications/add", {
-              senderId: currentUser.user.id,
-              receiverId: currentUser.user.id,
+              senderId: currentUser.id,
+              receiverId: currentUser.id,
               type: 2,
             });
           } catch (error) {
@@ -159,11 +159,11 @@ const Comment = ({comment,index}) => {
           <UilCornerUpLeftAlt />
           Phản hồi
         </div>
-        {currentUser.user.id === comment.userId ? (<div className="icon" onClick={()=>{setUpdate(!update)}}>
+        {currentUser.id === comment.userId ? (<div className="icon" onClick={()=>{setUpdate(!update)}}>
           <UilEdit />
           Chỉnh sửa
         </div>) : ""}
-        {currentUser.user.id === comment.userId ? (<div className="icon" onClick={handleDelete}>
+        {currentUser.id === comment.userId ? (<div className="icon" onClick={handleDelete}>
           <UilTrash />
           Xóa
         </div>) : ""}

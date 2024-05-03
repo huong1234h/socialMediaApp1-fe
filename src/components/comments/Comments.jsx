@@ -39,10 +39,10 @@ const Comments = ({ postId, userId }) => {
         queryClient.invalidateQueries(["comments", postId]);
 
         // Conditional notification (consider error handling)
-        if (userId !== currentUser.user.id) {
+        if (userId !== currentUser.id) {
           try {
             await makeRequest.post("/notifications/add", {
-              senderId: currentUser.user.id,
+              senderId: currentUser.id,
               receiverId: userId,
               type: 2,
             });

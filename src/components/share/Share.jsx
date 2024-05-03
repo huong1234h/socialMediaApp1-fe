@@ -49,10 +49,10 @@ const Share = () => {
       <div className="container">
         <div className="top">
           <div className="left">
-            <img src={"/upload/" + currentUser.user.profilePic} alt="" />
+            <img src={"/upload/" + currentUser.profilePic} alt="" />
             <input
               type="text"
-              placeholder={`Bạn đang nghĩ gì, ${currentUser.user.name}?`}
+              placeholder={`Bạn đang nghĩ gì, ${currentUser.name}?`}
               onChange={(e) => setDesc(e.target.value)}
               value={desc}
             />
