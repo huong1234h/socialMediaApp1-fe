@@ -9,7 +9,7 @@ import BtnFollow from "../btnFollow/BtnFollow";
 import RecommendUser from "../recommendUser/RecommendUser";
 import "./rightBar.scss";
 
-const socket = io("http://localhost:8900");
+const socket = io(process.env.REACT_APP_SOCKET_URL);
 
 const RightBar = () => {
   const { currentUser } = useContext(AuthContext);
