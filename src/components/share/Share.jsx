@@ -7,7 +7,7 @@ import "./share.scss";
 const Share = () => {
   const [file, setFile] = useState(null);
   const [desc, setDesc] = useState("");
-
+  
   const upload = async () => {
     try {
       const formData = new FormData();
@@ -20,7 +20,7 @@ const Share = () => {
   };
 
   const { currentUser } = useContext(AuthContext);
-
+  console.log(currentUser);
   const queryClient = useQueryClient();
 
   const mutation = useMutation(
