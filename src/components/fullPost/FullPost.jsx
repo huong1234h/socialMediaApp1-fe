@@ -33,9 +33,9 @@ const FullPost = ({post, onHidden}) => {
       onSuccess: () => {
         // Invalidate and refetch
         queryClient.invalidateQueries(["likes"]);
-        if (!data.includes(currentUser.id) && currentUser.id != post.userId) {
+        if (!data.includes(currentUser?.id) && currentUser?.id != post.userId) {
           makeRequest.post("/notifications/add", {
-            senderId: currentUser.id,
+            senderId: currentUser?.id,
             receiverId: post.userId,
             type: 1,
           });
@@ -55,7 +55,7 @@ const FullPost = ({post, onHidden}) => {
     }
   );
   const handleLike = () => {
-    mutation.mutate(data.includes(currentUser.id));
+    mutation.mutate(data.includes(currentUser?.id));
   };
 
   const handleDelete = () => {
@@ -89,7 +89,7 @@ const FullPost = ({post, onHidden}) => {
           <div className="item like">
           {isLoading ? (
               "loading"
-            ) : data.includes(currentUser.id) ? (
+            ) : data.includes(currentUser?.id) ? (
               <FavoriteOutlinedIcon
                 style={{ color: "red" }}
                 onClick={handleLike}

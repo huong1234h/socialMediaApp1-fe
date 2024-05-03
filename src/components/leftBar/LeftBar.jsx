@@ -54,10 +54,10 @@ const LeftBar = () => {
         <div className="menu">
         <div className="user">
             <img
-              src={"/upload/" +currentUser.profilePic}
+              src={"/upload/" +currentUser?.profilePic}
               alt=""
             />
-            <span className="nUser">{currentUser.name}
+            <span className="nUser">{currentUser?.name}
             <br/>
             <span className="wUser">huongka233.com</span>
             </span>

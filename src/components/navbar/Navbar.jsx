@@ -8,9 +8,9 @@ const Navbar = () => {
   const { toggle, darkMode } = useContext(DarkModeContext);
   const { currentUser } = useContext(AuthContext);
   console.log(currentUser);
-  console.log(currentUser?.id);
-  console.log(currentUser.user?.id);
-  console.log(currentUser?.user.id);
+  // console.log(currentUser?.id);
+  // console.log(currentUser.user?.id);
+  // console.log(currentUser?.user.id);
 
   return (
     <div className="navbar">
@@ -35,7 +35,7 @@ const Navbar = () => {
         <div className="user">
           <button type='submit'>Create</button>
           <img
-            src={"/upload/" + currentUser.profilePic}
+            src={"/upload/" + currentUser?.profilePic}
             alt=""
           />
         </div>
