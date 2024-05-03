@@ -1,6 +1,9 @@
+import { UilMessage, UilSmileBeam } from '@iconscout/react-unicons';
 import MoreHorizSharpIcon from "@mui/icons-material/MoreHorizSharp";
 import axios from "axios";
+import Picker from 'emoji-picker-react';
 import { useContext, useEffect, useRef, useState } from "react";
+import { useLocation } from 'react-router-dom';
 import { io } from "socket.io-client";
 import Conversation from "../../components/conversation/Conversation.jsx";
 import Message from "../../components/message/Message.jsx";
@@ -10,17 +13,35 @@ import { DarkModeContext } from "../../context/darkModeContext";
 import "./messenger.scss";
 
 const Messenger = () => {
-  const { darkMode } = useContext(DarkModeContext);
   const { currentUser } = useContext(AuthContext);
+  //_____/messenger/:userId/conversationId
+    const requestedChat = {
+      id: parseInt(useLocation().pathname.split("/")[3]),
+      attendant1:currentUser?.id,
+      attendant2:parseInt(useLocation().pathname.split("/")[2]),};
+  
+  console.log("requestedChat: ",requestedChat,requestedChat.id);
+  console.log(requestedChat.id == false);
+  const { darkMode } = useContext(DarkModeContext);
+  
   const [conversations, setConversations] = useState([]);
-  const [currentChat, setCurrentChat] = useState(null);
-  const [listMessage, setListMessage] = useState([]);
+  const [currentChat, setCurrentChat] = useState(Boolean(requestedChat.id) === false ? null : requestedChat);
+  const [ listMessage, setListMessage] = useState([]);
   const [receiver, setReceiver] = useState(null);
+  const [onlineUsers,setOnlineUsers] = useState([]) ;
   const [message, setMessage] = useState("");
+  const [activeChatBox,setActiveChatBox] = useState(false);
+  const [showPicker,setShowPicker] = useState(false);
   const socket = useRef();
   const scrollRef = useRef();
+  
 
   const [arrivalMessage, setArrivalMessage] = useState(null);
+
+  const onEmojiClick = (emojiObject,event)=>{
+    setMessage((prevMessage => prevMessage + emojiObject.emoji));
+    setShowPicker(false);
+  }
 
   useEffect(() => {
     socket.current = io(process.env.REACT_APP_SOCKET_URL);
@@ -28,7 +49,7 @@ const Messenger = () => {
     socket.current.on("getMessage", (data) => {
       console.log(data); // Log received data
       setArrivalMessage({
-        senderId: data.senderId || currentUser.user.id, // Use senderId from data or fallback to currentUser
+        senderId: data.senderId || currentUser?.id, // Use senderId from data or fallback to currentUser
         receiveUserId: data.receiveUserId,
         contentMessage: data.contentMessage,
         zoomId: data.zoomId,
@@ -46,14 +67,18 @@ const Messenger = () => {
   }, [arrivalMessage, currentChat]);
 
   useEffect(() => {
-    socket.current.emit("addUser", currentUser.user.id);
+    socket.current.emit("addUser", currentUser?.id);
+    socket.current.on("getUsers",(users)=>{
+      setOnlineUsers(users);
+    })
   }, [currentUser]);
 
+  console.log(onlineUsers);
   useEffect(() => {
     const getConversations = async () => {
       try {
         const res = await axios.get(
-          process.env.REACT_APP_BACKEND_URL + `conversations/${currentUser.user.id}`
+          process.env.REACT_APP_BACKEND_URL + `conversations/${currentUser.id}`
         );
         setConversations(res.data);
       } catch (err) {
@@ -61,13 +86,13 @@ const Messenger = () => {
       }
     };
     getConversations();
-  }, [currentUser.user.id]);
+  }, [currentUser.id]);
 
   useEffect(() => {
     const getReceiver = async () => {
       try {
         let receiverId =
-          currentChat.attendant1 === currentUser.user.id
+          currentChat.attendant1 === currentUser?.id
             ? currentChat?.attendant2
             : currentChat?.attendant1;
         const response = await axios.get(
@@ -79,6 +104,8 @@ const Messenger = () => {
     getReceiver();
   }, [currentChat?.id]);
 
+  
+
   // console.log(conversations);
   console.log(currentChat?.id);
   useEffect(() => {
@@ -88,7 +115,9 @@ const Messenger = () => {
           process.env.REACT_APP_BACKEND_URL +`messages/${currentChat?.id}`
         );
         setListMessage(response.data);
-      } catch (err) {}
+      } catch (err) {
+
+      }
     };
     getChatBox();
   }, [currentChat?.id]);
@@ -96,14 +125,14 @@ const Messenger = () => {
 
   const handleSendMessage = async () => {
     const sendedData = {
-      sendUserId: currentUser.user.id,
+      sendUserId: currentUser?.id,
       receiveUserId: receiver?.id,
       contentMessage: message,
       zoomId: currentChat?.id,
     };
 
     socket.current.emit("sendMessage", {
-      sendUserId: currentUser.user.id,
+      sendUserId: currentUser?.id,
       receiveUserId: receiver?.id,
       contentMessage: message,
       zoomId: currentChat?.id,
@@ -117,6 +146,9 @@ const Messenger = () => {
       console.log(err.response.data);
     }
   };
+  const checkOnlineUser = (receiverId)=>{
+    return onlineUsers?.some((u)=>u.userId === receiverId);
+  }
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [listMessage]);
@@ -124,24 +156,29 @@ const Messenger = () => {
   console.log(listMessage);
   console.log(message);
 
+  const displayChatBox = ()=>{
+    
+    setActiveChatBox(!activeChatBox);
+  }
+
   return (
     <div className={`theme-${darkMode ? "dark" : "light"}`}>
       <Navbar />
       <div className="messenger">
-        <div className="chatMenuC">
+        <div className={`chatMenuC`}>
           <div className="name">Đoạn Chat</div>
           <input placeholder="Search for friends" className="chatMenuInput" />
           <div className="listConversations">
             {conversations.map((c, index) => {
               return (
                 <div onClick={() => setCurrentChat(c)} key={index}>
-                  <Conversation c={c} userId={currentUser.user.id} />
+                  <Conversation c={c} userId={currentUser?.id} displayChatBox={displayChatBox} onlineUsers={onlineUsers}/>
                 </div>
               );
             })}
           </div>
         </div>
-        <div className="chatBox">
+        <div className={`chatBox`}>
           {currentChat === null ? (
             <div className="noChatBox">No Conversation</div>
           ) : (
@@ -157,12 +194,12 @@ const Messenger = () => {
                       } 
                       alt=""
                     />
-                    <span>h</span>
+                    {checkOnlineUser(receiver?.id) && <span>h</span>}
                   </div>
                   <div className="name_user">
                     {receiver?.name}
                     <br></br>
-                    <span>Active now</span>
+                    {checkOnlineUser(receiver?.id) && <span>Active now</span>}
                   </div>
                 </div>
                 <div className="toggle">
@@ -176,7 +213,7 @@ const Messenger = () => {
                   return (
                     <div ref={scrollRef}>
                     <Message
-                      own={currentUser.user.id === m?.sendUserId}
+                      own={currentUser?.id === m?.sendUserId}
                       m={m}
                       key={index}
                     />
@@ -186,16 +223,20 @@ const Messenger = () => {
                 
               </div>
               <div className="chatBottom">
-            <input
+                <div className="emoji" onClick={()=>{setShowPicker(!showPicker)}}><UilSmileBeam/></div>
+                <div className='inputMessage'><input
               value={message}
               onChange={(e) => {
                 setMessage(e.target.value);
               }}
               placeholder="Aa"
-            />
-            <button type="submit" onClick={handleSendMessage}>
-              Send
-            </button>
+            /></div>
+            <div className="buttonSend"><button type="submit" onClick={handleSendMessage}>
+              Send <span><UilMessage/></span>
+            </button></div>
+            {showPicker && <div className='picker_container'><Picker
+        pickerStyle={{ width: '120%' }}
+        onEmojiClick={onEmojiClick} /> </div>}
           </div>
             </>
           )}

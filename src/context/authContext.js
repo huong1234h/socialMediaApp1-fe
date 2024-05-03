@@ -9,29 +9,16 @@ export const AuthContextProvider = ({ children }) => {
   );
 
   const login = async (inputs) => {
-    try {
-      const res = await axios.post(
-        process.env.REACT_APP_BACKEND_URL + "auth/login",
-        inputs,
-        { withCredentials: true }
-      );
-      setCurrentUser(res.data);
-    } catch (error) {
-      console.error("Login Error:", error);
-      // Handle login errors gracefully (e.g., display error messages to user)
-    }
+    const res = await axios.post(process.env.REACT_APP_BACKEND_URL +"auth/login", inputs, {
+      withCredentials: true,
+    });
+
+    setCurrentUser(res.data);
   };
 
   useEffect(() => {
-    // Persist currentUser only on successful login
-    if (currentUser) {
-      localStorage.setItem("user", JSON.stringify(currentUser));
-    }
+    localStorage.setItem("user", JSON.stringify(currentUser));
   }, [currentUser]);
-
-  // Console log for debugging purposes (remove for production)
-  console.log("Current User:", currentUser);
-  console.log("currentId:", currentUser?.id);
 
   return (
     <AuthContext.Provider value={{ currentUser, login }}>
