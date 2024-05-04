@@ -15,7 +15,7 @@ const Conversation = function ({ c, userId, index ,displayChatBox,onlineUsers}) 
   useEffect(() => {
     const getUser = async () => {
       try {
-        const response = await axios.get(`http://localhost:8800/api/users/find/${receiverId}`);
+        const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}users/find/${receiverId}`);
         setReceiver(response.data); // Assuming data is in response.data
       } catch (err) {
         console.error('Error fetching user data:', err); // Handle errors gracefully
