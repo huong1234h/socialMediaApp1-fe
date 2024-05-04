@@ -19,7 +19,7 @@ const LeftBar = () => {
     setNotification(!notification);
   }
   console.log("Left Bar:");
-  console.log(currentUser.user.id);
+  console.log(currentUser?.id);
   console.log(currentUser);
   const handleHiddenNotification = ()=>{
     console.log("hhhhhhhhhhhhhhhh");
