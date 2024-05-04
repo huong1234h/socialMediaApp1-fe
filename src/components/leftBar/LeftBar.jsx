@@ -66,7 +66,7 @@ const LeftBar = () => {
             
           </div>
         </div>
-        {notification === true ? <Notifications userId={currentUser.user.id} onHidden={handleHiddenNotification} /> : (<div className="menu">
+        {notification === true ? <Notifications userId={currentUser?.id} onHidden={handleHiddenNotification} /> : (<div className="menu">
           <Link to='/' style={{textDecoration:'none'}}>
           <div className="item">
             <UilEstate size="30"/>
