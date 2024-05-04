@@ -1,8 +1,14 @@
+import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
+import FacebookTwoToneIcon from "@mui/icons-material/FacebookTwoTone";
+import InstagramIcon from "@mui/icons-material/Instagram";
+import LanguageIcon from "@mui/icons-material/Language";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import PlaceIcon from "@mui/icons-material/Place";
+import TwitterIcon from "@mui/icons-material/Twitter";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useContext, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { makeRequest } from "../../axios";
-import CurrentPost from "../../components/currentPost/CurrentPost";
 import Posts from "../../components/posts/Posts";
 import Update from "../../components/update/Update";
 import { AuthContext } from "../../context/authContext";
@@ -11,6 +17,7 @@ import "./profile.scss";
 const Profile = () => {
   const [openUpdate, setOpenUpdate] = useState(false);
   const { currentUser } = useContext(AuthContext);
+  console.log("currentUser Profile:",currentUser);
 
   const userId = parseInt(useLocation().pathname.split("/")[2]);
 
@@ -45,7 +52,7 @@ const Profile = () => {
   );
 
   const handleFollow = () => {
-    mutation.mutate(relationshipData.includes(currentUser?.id));
+    mutation.mutate(relationshipData.includes(currentUser.id));
   };
 
   return (
@@ -56,54 +63,50 @@ const Profile = () => {
         <>
           <div className="images">
             <img src={"/upload/"+data.coverPic} alt="" className="cover" />
+            <img src={"/upload/"+data.profilePic} alt="" className="profilePic" />
           </div>
-          
           <div className="profileContainer">
             <div className="uInfo">
-            <div className="profilePic">
-              <img src={"/upload/"+data.profilePic} alt="" className="profilePic" />
-            </div>
-            
+              <div className="left">
+                <a href="http://facebook.com">
+                  <FacebookTwoToneIcon fontSize="medium" />
+                </a>
+                <a href="http://facebook.com">
+                  <InstagramIcon fontSize="medium" />
+                </a>
+                <a href="http://facebook.com">
+                  <TwitterIcon fontSize="medium" />
+                </a>
+              </div>
               <div className="center">
-                <div className="userName">{data.name}
-                <span className="location">Live in {data?.city}
-                  </span></div>
+                <span>{data.name}</span>
                 <div className="info">
                   <div className="item">
-                    Theo dõi
-                    <span>455</span>
+                    <PlaceIcon />
+                    <span>{data.city}</span>
                   </div>
                   <div className="item">
-                    Đang theo dõi
-                    <span>155</span>
-                  </div>
-                  <div className="item">
-                    Bài viết
-                    <span>64</span>
+                    <LanguageIcon />
+                    <span>{data.website}</span>
                   </div>
                 </div>
-                <div className="button-profile">
-            {rIsLoading ? (
+                {rIsLoading ? (
                   "Đang tải..."
-                ) : userId === currentUser?.id ? (
-                  <>
-                  <button className="update-btn" onClick={() => setOpenUpdate(true)}>Cập nhật</button>
-                  <button className="create-story">Tạo tin</button>
-                  </>
+                ) : userId === currentUser.user.id ? (
+                  <button onClick={() => setOpenUpdate(true)}>Cập nhật</button>
                 ) : (
-                  <>
                   <button onClick={handleFollow}>
-                    {relationshipData.includes(currentUser?.id)
+                    {relationshipData.includes(currentUser.user.id)
                       ? "Đang theo dõi"
                       : "Theo dõi"}
                   </button>
-                  <button className="chat">Nhắn tin</button>
-                  </>
                 )}
-            </div>
+              </div>
+              <div className="right">
+                <EmailOutlinedIcon />
+                <MoreVertIcon />
               </div>
             </div>
-            <CurrentPost/>
             <Posts userId={userId} />
           </div>
         </>

@@ -15,17 +15,17 @@ import "./messenger.scss";
 const Messenger = () => {
   const { currentUser } = useContext(AuthContext);
   //_____/messenger/:userId/conversationId
-    const requestedChat = {
-      id: parseInt(useLocation().pathname.split("/")[3]),
-      attendant1:currentUser?.id,
-      attendant2:parseInt(useLocation().pathname.split("/")[2]),};
   
-  console.log("requestedChat: ",requestedChat,requestedChat.id);
-  console.log(requestedChat.id == false);
+  
+  
+  const location = useLocation();
+  
+  
+  console.log("requestedChat",location.state?.requestedChat[0]);
   const { darkMode } = useContext(DarkModeContext);
-  
+  // console.log("requestedChat : ",requestedChat[0].id);
   const [conversations, setConversations] = useState([]);
-  const [currentChat, setCurrentChat] = useState(Boolean(requestedChat.id) === false ? null : requestedChat);
+  const [currentChat, setCurrentChat] = useState(location.state?.requestedChat[0]===undefined ? null : location.state?.requestedChat[0]);
   const [ listMessage, setListMessage] = useState([]);
   const [receiver, setReceiver] = useState(null);
   const [onlineUsers,setOnlineUsers] = useState([]) ;
@@ -78,7 +78,7 @@ const Messenger = () => {
     const getConversations = async () => {
       try {
         const res = await axios.get(
-          process.env.REACT_APP_BACKEND_URL + `conversations/${currentUser?.id}`
+          process.env.REACT_APP_BACKEND_URL + `conversations/${currentUser.id}`
         );
         setConversations(res.data);
       } catch (err) {
@@ -86,7 +86,7 @@ const Messenger = () => {
       }
     };
     getConversations();
-  }, [currentUser?.id]);
+  }, [currentUser.id]);
 
   useEffect(() => {
     const getReceiver = async () => {

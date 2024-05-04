@@ -16,17 +16,9 @@
     
     border-bottom: .1px solid themed('bgInput');
     transition: all .2s linear;
-    @include mobile{
-        height: 50px;
-        width: 90vh;
-        padding:8px;
-    }
     &:hover{
         background-color: hsla(255,80%,80%,.5);
         border-radius: 10px;
-        @include mobile{
-            border-radius: 0;
-        }
     }
     .image{
         position: relative;
@@ -36,10 +28,6 @@
             border-radius: 50%;
         
             margin-right: 20px;
-            @include mobile{
-                width: 40px;
-                height: 40px;
-            }
         }
         span{
             position: absolute;
@@ -49,10 +37,6 @@
             background-color: hsl(147, 80%, 60%);
             top: 37px;
             left: 38px;
-            @include mobile{
-                top:25px;
-                left: 31px;
-            }
         }
 
 
@@ -64,16 +48,10 @@
         font-size:18px;
         font-weight: 550;
         color:themed("textColor");
-        @include mobile{
-            font-size: 16px;
-        }
         .newMess{
             font-size: 14px;
             color:themed("textColorSoft");
             font-weight: 300;
-            @include mobile{
-                font-size: 12px;
-            }
         }
     }
 }}

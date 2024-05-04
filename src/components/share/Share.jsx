@@ -7,7 +7,7 @@ import "./share.scss";
 const Share = () => {
   const [file, setFile] = useState(null);
   const [desc, setDesc] = useState("");
-  
+
   const upload = async () => {
     try {
       const formData = new FormData();
@@ -20,7 +20,7 @@ const Share = () => {
   };
 
   const { currentUser } = useContext(AuthContext);
-  console.log(currentUser);
+
   const queryClient = useQueryClient();
 
   const mutation = useMutation(
@@ -49,10 +49,10 @@ const Share = () => {
       <div className="container">
         <div className="top">
           <div className="left">
-            <img src={"/upload/" + currentUser?.profilePic} alt="" />
+            <img src={"/upload/" + currentUser.profilePic} alt="" />
             <input
               type="text"
-              placeholder={`Bạn đang nghĩ gì, ${currentUser?.name}?`}
+              placeholder={`Bạn đang nghĩ gì, ${currentUser.name}?`}
               onChange={(e) => setDesc(e.target.value)}
               value={desc}
             />

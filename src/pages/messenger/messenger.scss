@@ -99,10 +99,10 @@
 
             .infoReceiver{
                 display:grid;
-                grid-template-columns: .5fr 1fr;
+                grid-template-columns: 40px 1fr;
                 justify-content: start;
                 align-items: center;
-                gap:5px;
+                gap:10px;
                 .image{
                     position: relative;
                     img{

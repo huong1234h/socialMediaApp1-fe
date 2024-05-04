@@ -9,14 +9,15 @@ import BtnFollow from "../btnFollow/BtnFollow";
 import RecommendUser from "../recommendUser/RecommendUser";
 import "./rightBar.scss";
 
-const socket = io(process.env.REACT_APP_SOCKET_URL);
+const socket = io("http://localhost:8900");
 
 const RightBar = () => {
   const { currentUser } = useContext(AuthContext);
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [recommendUser, setRecommendUser] = useState(false);
   const [createdConversation,setCreatedConversation] = useState(false);
-  const userId = currentUser?.id;
+  const [requestedChat,setRequestedChat] = useState(null);
+  const userId = currentUser.id;
   const { isLoading, error, data } = useQuery(["users"], () =>
     makeRequest.get(`/users/${userId}`).then((res) => {
       return res.data;
@@ -45,11 +46,13 @@ const RightBar = () => {
 
   const handleAccessChat = async (userId) => {
     try {
-      await axios.post(process.env.REACT_APP_BACKEND_URL + `conversations/add`,{
+      const res = await axios.post(process.env.REACT_APP_BACKEND_URL + `conversations/add`,{
         att1Id:currentUser?.id,
         att2Id : userId,
       });
+      setRequestedChat(res.data);
       setCreatedConversation(true);
+      
     } catch (err) {
       setCreatedConversation(false);
     }
@@ -95,8 +98,9 @@ const RightBar = () => {
             return (
               <div className="user" key={index} onClick={()=>{handleAccessChat(relationship.userId);}}>
                 <div className="userInfo">
+                  {console.log(relationship.profilePic)}
                   <img
-                    src="https://images.pexels.com/photos/4881619/pexels-photo-4881619.jpeg?auto=compress&cs=tinysrgb&w=1600"
+                    src={relationship.profilePic=== null ? "/upload/image.png" : `/upload/${relationship.profilePic}`}
                     alt=""
                   />
                   {checkOnlineUser(relationship.userId) && (
@@ -117,7 +121,7 @@ const RightBar = () => {
           }}
         />
       )}
-      {createdConversation && <Navigate to="/messenger" replace={true}/>}
+      {createdConversation && <Navigate to="/messenger" replace={true} state={{requestedChat:requestedChat}}/>}
     </div>
   );
 };

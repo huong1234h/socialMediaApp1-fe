@@ -14,11 +14,13 @@ const LeftBar = () => {
   const { currentUser } = useContext(AuthContext);
   const [logout,setLogout] = useState(false);
   
-
+  console.log(currentUser);
   const handleOnNotification = ()=>{
     setNotification(!notification);
   }
-
+  console.log("Left Bar:");
+  console.log(currentUser.user.id);
+  console.log(currentUser);
   const handleHiddenNotification = ()=>{
     console.log("hhhhhhhhhhhhhhhh");
     setNotification(!notification);
@@ -54,17 +56,17 @@ const LeftBar = () => {
         <div className="menu">
         <div className="user">
             <img
-              src={"/upload/" +currentUser?.profilePic}
+              src={"/upload/" +currentUser.user.profilePic}
               alt=""
             />
-            <span className="nUser">{currentUser?.name}
+            <span className="nUser">{currentUser.user.name}
             <br/>
             <span className="wUser">huongka233.com</span>
             </span>
             
           </div>
         </div>
-        {notification === true ? <Notifications userId={currentUser?.id} onHidden={handleHiddenNotification} /> : (<div className="menu">
+        {notification === true ? <Notifications userId={currentUser.user.id} onHidden={handleHiddenNotification} /> : (<div className="menu">
           <Link to='/' style={{textDecoration:'none'}}>
           <div className="item">
             <UilEstate size="30"/>

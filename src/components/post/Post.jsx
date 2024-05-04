@@ -10,13 +10,12 @@ import { Link } from "react-router-dom";
 import { makeRequest } from "../../axios";
 import { AuthContext } from "../../context/authContext";
 import Comments from "../comments/Comments";
-import FullPost from "../fullPost/FullPost";
 import "./post.scss";
 
 const Post = ({ post }) => {
   const [commentOpen, setCommentOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [showImg,setShowImg] = useState(false);
+
   const { currentUser } = useContext(AuthContext);
 
   const { isLoading, error, data } = useQuery(["likes", post.id], () =>
@@ -24,8 +23,6 @@ const Post = ({ post }) => {
       return res.data;
     })
   );
-
-
 
   const queryClient = useQueryClient();
 
@@ -38,9 +35,9 @@ const Post = ({ post }) => {
       onSuccess: () => {
         // Invalidate and refetch
         queryClient.invalidateQueries(["likes"]);
-        if(!data.includes(currentUser?.id) && currentUser?.id != post?.userId){
+        if(!data.includes(currentUser.user.id) && currentUser.user.id != post?.userId){
           makeRequest.post("/notifications/add",{
-            senderId:currentUser?.id,
+            senderId:currentUser.user.id,
             receiverId:post?.userId,
             type:1
           })
@@ -62,7 +59,7 @@ const Post = ({ post }) => {
   );
 
   const handleLike = () => {
-    mutation.mutate(data.includes(currentUser?.id));
+    mutation.mutate(data.includes(currentUser.user.id));
   };
 
   const handleDelete = () => {
@@ -86,19 +83,19 @@ const Post = ({ post }) => {
             </div>
           </div>
           <MoreHorizIcon onClick={() => setMenuOpen(!menuOpen)} />
-          {menuOpen && post.userId === currentUser?.id && (
+          {menuOpen && post.userId === currentUser.user.id && (
             <button onClick={handleDelete}>delete</button>
           )}
         </div>
         <div className="content">
           <p>{post.desc}</p>
-          <img src={"/upload/" + post.img} alt="" onClick={()=>{setShowImg(!showImg);document.body.style.overflow = showImg ? 'auto' : 'hidden';}}/>
+          <img src={"/upload/" + post.img} alt="" />
         </div>
         <div className="info">
           <div className="item">
             {isLoading ? (
               "loading"
-            ) : data.includes(currentUser?.id) ? (
+            ) : data.includes(currentUser.user.id) ? (
               <FavoriteOutlinedIcon
                 style={{ color: "red" }}
                 onClick={handleLike}
@@ -117,9 +114,8 @@ const Post = ({ post }) => {
             Chia sẻ
           </div>
         </div>
-        {commentOpen && data && <Comments postId={post.id} userId={post.userId} />}
+        {commentOpen && <Comments postId={post.id} userId={post.userId} />}
       </div>
-      {showImg && <FullPost post={post} onHidden={()=>{setShowImg(!showImg);document.body.style.overflow = showImg ? 'auto' : 'hidden';}}/>}
     </div>
   );
 };
