@@ -52,7 +52,7 @@ const Profile = () => {
   );
 
   const handleFollow = () => {
-    mutation.mutate(relationshipData.includes(currentUser.id));
+    mutation.mutate(relationshipData.includes(currentUser?.id));
   };
 
   return (
@@ -92,11 +92,11 @@ const Profile = () => {
                 </div>
                 {rIsLoading ? (
                   "Đang tải..."
-                ) : userId === currentUser.user.id ? (
+                ) : userId === currentUser?.id ? (
                   <button onClick={() => setOpenUpdate(true)}>Cập nhật</button>
                 ) : (
                   <button onClick={handleFollow}>
-                    {relationshipData.includes(currentUser.user.id)
+                    {relationshipData.includes(currentUser?.id)
                       ? "Đang theo dõi"
                       : "Theo dõi"}
                   </button>

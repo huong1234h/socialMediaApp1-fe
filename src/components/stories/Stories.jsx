@@ -21,8 +21,8 @@ const Stories = () => {
     <div>
     <div className="stories">
       <div className="story">
-        <img src={"/upload/" + currentUser.user.profilePic} alt="" />
-        <span>{currentUser.user.name}</span>
+        <img src={"/upload/" + currentUser?.profilePic} alt="" />
+        <span>{currentUser?.name}</span>
         <button onClick={()=>{setOpenForm(!openForm)}}>+</button>
       </div>
       {error

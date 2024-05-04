@@ -9,7 +9,7 @@ import BtnFollow from "../btnFollow/BtnFollow";
 import RecommendUser from "../recommendUser/RecommendUser";
 import "./rightBar.scss";
 
-const socket = io("http://localhost:8900");
+const socket = io(process.env.REACT_APP_SOCKET_URL);
 
 const RightBar = () => {
   const { currentUser } = useContext(AuthContext);
@@ -17,7 +17,7 @@ const RightBar = () => {
   const [recommendUser, setRecommendUser] = useState(false);
   const [createdConversation,setCreatedConversation] = useState(false);
   const [requestedChat,setRequestedChat] = useState(null);
-  const userId = currentUser.id;
+  const userId = currentUser?.id;
   const { isLoading, error, data } = useQuery(["users"], () =>
     makeRequest.get(`/users/${userId}`).then((res) => {
       return res.data;
