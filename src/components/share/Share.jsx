@@ -72,7 +72,7 @@ const Share = () => {
           </div>
           <div className="right">
             {img && (
-              <img className="file" alt="" src={imgUrl} />
+              <img className="file" alt="" src={URL.createObjectURL(img)} />
             )}
           </div>
         </div>
