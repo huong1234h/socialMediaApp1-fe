@@ -72,7 +72,7 @@ const Share = () => {
           </div>
           <div className="right">
             {img && (
-              <img className="file" alt="" src={URL.createObjectURL(file)} /> // Conditionally render image
+              <img className="file" alt="" src={imgUrl} />
             )}
           </div>
         </div>
