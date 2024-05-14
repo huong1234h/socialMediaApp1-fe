@@ -7,28 +7,28 @@ import { imageDb } from "../../Config";
 import { makeRequest } from "../../axios";
 import { AuthContext } from "../../context/authContext";
 import "./share.scss";
+
 const Share = () => {
   const [img, setImg] = useState(null);
   const [desc, setDesc] = useState("");
-  const [imgUrl,setImgUrl] = useContext('');
-  
-
-
+  const [imgUrl, setImgUrl] = useState(null); // Initial state is null
   const { currentUser } = useContext(AuthContext);
 
   const queryClient = useQueryClient();
 
-  const handleSendImg = () =>{
-    if(img !== null){
-      const imgRef = ref(imageDb,`files/${v4()}`);
-      uploadBytes(imgRef,img).then(value=>{
-        console.log(value);
-        getDownloadURL(value.ref).then(url=>{
-          setImgUrl(url);
-        })
-      })
+  const handleSendImg = async () => {
+    try {
+      if (img !== null) {
+        const imgRef = ref(imageDb, `files/${v4()}`);
+        await uploadBytes(imgRef, img);
+        const url = await getDownloadURL(imgRef);
+        setImgUrl(url);
+      }
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      // Display an error message to the user
     }
-  }
+  };
 
   const mutation = useMutation(
     (newPost) => {
@@ -44,12 +44,17 @@ const Share = () => {
 
   const handleClick = async (e) => {
     e.preventDefault();
-    if(img){
+    if (img) {
       await handleSendImg();
     }
-    mutation.mutate({ desc, img: imgUrl });
-    setDesc("");
-    setFile(null);
+    try {
+      mutation.mutate({ desc, img: imgUrl });
+      setDesc("");
+      setImg(null);
+    } catch (error) {
+      console.error("Error creating post:", error);
+      // Display an error message to the user
+    }
   };
 
   return (
@@ -67,7 +72,7 @@ const Share = () => {
           </div>
           <div className="right">
             {img && (
-              <img className="file" alt="" src={imgUrl} />
+              <img className="file" alt="" src={URL.createObjectURL(file)} /> // Conditionally render image
             )}
           </div>
         </div>
@@ -82,15 +87,14 @@ const Share = () => {
             />
             <label htmlFor="file">
               <div className="item">
-                <UilImagePlus size="30"/>
+                <UilImagePlus size="30" />
                 <span>Thêm ảnh</span>
               </div>
             </label>
             <div className="item">
-              <UilLocationPoint size="30"/>
+              <UilLocationPoint size="30" />
               <span>Thêm vị trí</span>
             </div>
-            
           </div>
           <div className="right">
             <button onClick={handleClick}>Đăng</button>
