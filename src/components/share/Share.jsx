@@ -1,27 +1,34 @@
 import { UilImagePlus, UilLocationPoint } from '@iconscout/react-unicons';
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { useContext, useState } from "react";
+import { v4 } from 'uuid';
+import { imageDb } from "../../Config";
 import { makeRequest } from "../../axios";
 import { AuthContext } from "../../context/authContext";
 import "./share.scss";
 const Share = () => {
-  const [file, setFile] = useState(null);
+  const [img, setImg] = useState(null);
   const [desc, setDesc] = useState("");
+  const [imgUrl,setImgUrl] = useContext('');
+  
 
-  const upload = async () => {
-    try {
-      const formData = new FormData();
-      formData.append("file", file);
-      const res = await makeRequest.post("/upload", formData);
-      return res.data;
-    } catch (err) {
-      console.log(err);
-    }
-  };
 
   const { currentUser } = useContext(AuthContext);
 
   const queryClient = useQueryClient();
+
+  const handleSendImg = () =>{
+    if(img !== null){
+      const imgRef = ref(imageDb,`files/${v4()}`);
+      uploadBytes(imgRef,img).then(value=>{
+        console.log(value);
+        getDownloadURL(value.ref).then(url=>{
+          setImgUrl(url);
+        })
+      })
+    }
+  }
 
   const mutation = useMutation(
     (newPost) => {
@@ -37,8 +44,9 @@ const Share = () => {
 
   const handleClick = async (e) => {
     e.preventDefault();
-    let imgUrl = "";
-    if (file) imgUrl = await upload();
+    if(img){
+      await handleSendImg();
+    }
     mutation.mutate({ desc, img: imgUrl });
     setDesc("");
     setFile(null);
@@ -58,8 +66,8 @@ const Share = () => {
             />
           </div>
           <div className="right">
-            {file && (
-              <img className="file" alt="" src={URL.createObjectURL(file)} />
+            {img && (
+              <img className="file" alt="" src={imgUrl} />
             )}
           </div>
         </div>
@@ -70,7 +78,7 @@ const Share = () => {
               type="file"
               id="file"
               style={{ display: "none" }}
-              onChange={(e) => setFile(e.target.files[0])}
+              onChange={(e) => setImg(e.target.files[0])}
             />
             <label htmlFor="file">
               <div className="item">
