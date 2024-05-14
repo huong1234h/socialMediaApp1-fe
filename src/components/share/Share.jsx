@@ -49,7 +49,7 @@ const Share = () => {
     }
     mutation.mutate({ desc, img: imgUrl });
     setDesc("");
-    setFile(null);
+    setImg(null);
   };
 
   return (
