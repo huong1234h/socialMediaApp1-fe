@@ -17,7 +17,7 @@ import "./fullPost.scss";
 
 const FullPost = ({post, onHidden}) => {
   const { isLoading, error, data } = useQuery(["likes", post.id], () =>
-    makeRequest.get("/likes?postId=" +post.id).then((res) => {
+    makeRequest.get("/likes?postId=" + post.id).then((res) => {
       return res.data;
     })
   );
@@ -54,6 +54,15 @@ const FullPost = ({post, onHidden}) => {
       },
     }
   );
+  const handleHiddenNav = ()=>{
+    document.querySelector('.navbar').style.zIndex = "-1";
+    document.querySelector('.rightBar').style.zIndex = "-1";
+  }
+  const handleDisplayNav = ()=>{
+    document.querySelector('.navbar').style.zIndex = "99";
+    document.querySelector('.rightBar').style.zIndex = "99";
+  }
+  handleHiddenNav();
   const handleLike = () => {
     mutation.mutate(data.includes(currentUser?.id));
   };
@@ -65,17 +74,17 @@ const FullPost = ({post, onHidden}) => {
   console.log(post);
   return (
     <div className="fullPost">
-      <div className="exit" onClick={onHidden}>
+      <div className="exit" onClick={()=>{handleDisplayNav();onHidden()}}>
         <UilMultiply />
       </div>
       <div className="imagePost">
-        <img src={"/upload/" + post.img} alt="" />
+        <img src={post.img} alt="" />
       </div>
       <div className="infoPost">
         <div className="info">
           <div className="user">
             <div className="profile_post">
-              <img src={"/upload/" +post.profilePic} alt="" />
+              <img src={post.profilePic} alt="" />
             </div>
             <div className="name">{post.name}</div>
             <div className="time">{moment(post.createdAt).fromNow()}</div>

@@ -1,14 +1,21 @@
 import { useQuery } from "@tanstack/react-query";
+import { useLocation } from "react-router-dom";
 import { makeRequest } from "../../axios";
 import Post from "../post/Post";
 import "./posts.scss";
 
 const Posts = ({userId}) => {
-  const { isLoading, error, data } = useQuery(["posts"], () =>
-    makeRequest.get("/posts?userId="+userId).then((res) => {
+  
+  const postsUserId = parseInt(useLocation().pathname.split("/")[2]);
+  console.log(postsUserId);
+  const { isLoading, error, data } = useQuery(["posts",userId], () =>
+    makeRequest.get("/posts?userId="+userId ).then((res) => {
+      console.log("userId",userId);
       return res.data;
     })
   );
+
+
   console.log(data);
   return (
     <div className="posts">
@@ -16,7 +23,7 @@ const Posts = ({userId}) => {
         ? "Lỗi tải trang!"
         : isLoading
         ? "Đang tải..."
-        : data.map((post,index) => <Post post={post} key={index} />)}
+        : data?.map((post,index) => <Post post={post} key={index} />)}
     </div>
   );
 };

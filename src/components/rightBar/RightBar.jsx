@@ -17,7 +17,7 @@ const RightBar = () => {
   const [recommendUser, setRecommendUser] = useState(false);
   const [createdConversation,setCreatedConversation] = useState(false);
   const [requestedChat,setRequestedChat] = useState(null);
-  const userId = currentUser?.id;
+  const userId = currentUser.id;
   const { isLoading, error, data } = useQuery(["users"], () =>
     makeRequest.get(`/users/${userId}`).then((res) => {
       return res.data;
@@ -100,10 +100,10 @@ const RightBar = () => {
                 <div className="userInfo">
                   {console.log(relationship.profilePic)}
                   <img
-                    src={relationship.profilePic=== null ? "/upload/image.png" : `/upload/${relationship.profilePic}`}
+                    src={relationship.profilePic=== null ? "/upload/image.png" : `${relationship?.profilePic}`}
                     alt=""
                   />
-                  {checkOnlineUser(relationship.userId) && (
+                  {checkOnlineUser(relationship?.userId) && (
                     <div className="online" />
                   )}
                   <span>{relationship.name}</span>

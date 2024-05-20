@@ -37,7 +37,7 @@ const BtnFollow = ({ userId}) => {
       },
     }
   );
-  const isFollowing = relationshipData?.includes(currentUser?.id);
+  const isFollowing = relationshipData?.includes(currentUser.id);
   const handleFollow = async () => {
     await mutation.mutateAsync(isFollowing); // Use mutateAsync for better error handling
   };

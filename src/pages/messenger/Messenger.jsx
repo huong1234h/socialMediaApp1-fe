@@ -1,4 +1,4 @@
-import { UilMessage, UilSmileBeam } from '@iconscout/react-unicons';
+import { UilMessage, UilSmileBeam, UilTrash, UilUser } from '@iconscout/react-unicons';
 import MoreHorizSharpIcon from "@mui/icons-material/MoreHorizSharp";
 import axios from "axios";
 import Picker from 'emoji-picker-react';
@@ -32,6 +32,7 @@ const Messenger = () => {
   const [message, setMessage] = useState("");
   const [activeChatBox,setActiveChatBox] = useState(false);
   const [showPicker,setShowPicker] = useState(false);
+  const [showOption,setShowOption] = useState(false);
   const socket = useRef();
   const scrollRef = useRef();
   
@@ -45,7 +46,7 @@ const Messenger = () => {
 
   useEffect(() => {
     socket.current = io(process.env.REACT_APP_SOCKET_URL);
-
+    
     socket.current.on("getMessage", (data) => {
       console.log(data); // Log received data
       setArrivalMessage({
@@ -59,18 +60,19 @@ const Messenger = () => {
   }, []);
 
   useEffect(() => {
+    console.log("arrivalMessage",arrivalMessage);
     arrivalMessage &&
       (currentChat?.attendant1 === arrivalMessage.senderId ||
         currentChat?.attendant2 === arrivalMessage.senderId) &&
       setListMessage((prev) => [...prev, arrivalMessage]);
       
-  }, [arrivalMessage, currentChat]);
+  }, [arrivalMessage]);
 
   useEffect(() => {
     socket.current.emit("addUser", currentUser?.id);
     socket.current.on("getUsers",(users)=>{
       setOnlineUsers(users);
-    })
+    });
   }, [currentUser]);
 
   console.log(onlineUsers);
@@ -78,7 +80,7 @@ const Messenger = () => {
     const getConversations = async () => {
       try {
         const res = await axios.get(
-          process.env.REACT_APP_BACKEND_URL + `conversations/${currentUser?.id}`
+          process.env.REACT_APP_BACKEND_URL + `conversations/${currentUser.id}`
         );
         setConversations(res.data);
       } catch (err) {
@@ -86,7 +88,7 @@ const Messenger = () => {
       }
     };
     getConversations();
-  }, [currentUser?.id]);
+  }, [currentUser.id]);
 
   useEffect(() => {
     const getReceiver = async () => {
@@ -137,6 +139,8 @@ const Messenger = () => {
       contentMessage: message,
       zoomId: currentChat?.id,
     });
+
+    
 
     try {
       await axios.post(process.env.REACT_APP_BACKEND_URL +`messages/`, sendedData);
@@ -190,7 +194,7 @@ const Messenger = () => {
                       src={
                         receiver?.profilePic === null
                           ? "/upload/image.png"
-                          : `/upload/${receiver?.profilePic}`
+                          : `${receiver?.profilePic}`
                       } 
                       alt=""
                     />
@@ -202,9 +206,14 @@ const Messenger = () => {
                     {checkOnlineUser(receiver?.id) && <span>Active now</span>}
                   </div>
                 </div>
-                <div className="toggle">
+                <div className="toggle" onClick={()=>{setShowOption(!showOption)}}>
                   <MoreHorizSharpIcon />
                 </div>
+                {showOption && <div className="option">
+                  <div className='item accessProfile'><UilUser/> Trang cá nhân</div>
+                  <hr></hr>
+                  <div className="item deleteConversation"><UilTrash/>Xóa đoạn chat</div>
+                </div>}
               </div>
               
               <div className="chatWrapper" >

@@ -1,4 +1,4 @@
-import { UilImagePlus, UilLocationPoint } from '@iconscout/react-unicons';
+import { UilImagePlus, UilLocationPoint, UilSpinner } from '@iconscout/react-unicons';
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { useContext, useState } from "react";
@@ -11,25 +11,31 @@ import "./share.scss";
 const Share = () => {
   const [img, setImg] = useState(null);
   const [desc, setDesc] = useState("");
-  const [imgUrl, setImgUrl] = useState(null); // Initial state is null
   const { currentUser } = useContext(AuthContext);
+
+  const [loading,setLoading] = useState(false);
 
   const queryClient = useQueryClient();
 
+  console.log(img);
   const handleSendImg = async () => {
     try {
       if (img !== null) {
         const imgRef = ref(imageDb, `files/${v4()}`);
         await uploadBytes(imgRef, img);
         const url = await getDownloadURL(imgRef);
-        setImgUrl(url);
+        console.log("link" , url);
+        return url;
       }
     } catch (error) {
       console.error("Error uploading image:", error);
       // Display an error message to the user
     }
   };
-
+  // useEffect(()=>{
+  //   handleSendImg();
+  // },[img]);
+ 
   const mutation = useMutation(
     (newPost) => {
       return makeRequest.post("/posts", newPost);
@@ -38,23 +44,27 @@ const Share = () => {
       onSuccess: () => {
         // Invalidate and refetch
         queryClient.invalidateQueries(["posts"]);
+        setLoading(false);
       },
     }
   );
 
   const handleClick = async (e) => {
     e.preventDefault();
-    if (img) {
-      await handleSendImg();
-    }
+    
+    setLoading(true);
     try {
+      let imgUrl = await handleSendImg();
       mutation.mutate({ desc, img: imgUrl });
       setDesc("");
+      
       setImg(null);
+      
     } catch (error) {
       console.error("Error creating post:", error);
       // Display an error message to the user
     }
+    
   };
 
   return (
@@ -62,7 +72,7 @@ const Share = () => {
       <div className="container">
         <div className="top">
           <div className="left">
-            <img src={"/upload/" + currentUser.profilePic} alt="" />
+            <img src={currentUser.profilePic} alt="" />
             <input
               type="text"
               placeholder={`Bạn đang nghĩ gì, ${currentUser.name}?`}
@@ -97,7 +107,7 @@ const Share = () => {
             </div>
           </div>
           <div className="right">
-            <button onClick={handleClick}>Đăng</button>
+            <button onClick={handleClick}>{!loading ? "Đăng" : <div className='loading'><UilSpinner/></div>}</button>
           </div>
         </div>
       </div>

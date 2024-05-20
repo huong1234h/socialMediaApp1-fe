@@ -96,7 +96,7 @@
             justify-content: space-between;
             height: fit-content;
             box-shadow: rgba(33, 35, 38, 0.1) 0px 10px 10px -10px;
-
+            position: relative;
             .infoReceiver{
                 display:grid;
                 grid-template-columns: 40px 1fr;
@@ -128,10 +128,36 @@
                         color:hsl(255,10%,50%);
                     }
                 }
+                
             }
             .toggle{
                 padding-right: 25px;
-                
+                cursor: pointer;
+                &:hover{
+                    color:themed('textColorSoft');
+                }
+            }
+            .option{
+                position: absolute;
+                background-color: themed('bg');
+                right: 30px;
+                top:75%;
+                width: 150px;
+                box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+                padding:10px;
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                border-radius: 5px;
+                .item{
+                    cursor: pointer;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    gap: 10px;
+                    color:hsl(255,20%,30%);
+
+                }
             }
         }
         .chatWrapper{

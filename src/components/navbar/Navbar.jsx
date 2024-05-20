@@ -40,10 +40,12 @@ const Navbar = () => {
       <div className="right">
         <div className="user">
           <button type='submit'>Create</button>
+          <Link to={`/profile/${currentUser.id}`}>
           <img
-            src={"/upload/" + currentUser?.profilePic}
+            src={currentUser.profilePic}
             alt=""
           />
+          </Link>
         </div>
       </div>
     </div>

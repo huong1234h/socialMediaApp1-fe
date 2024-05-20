@@ -4,7 +4,7 @@ const SearchedUser = ({ user }) => {
   return (
     <article className="sUser__profile">
       <img
-        src={user.profilePic ? `/upload/${user.profilePic}` : "/upload/image.png"} // Handle missing image URLs
+        src={user.profilePic ? `${user.profilePic}` : "/upload/image.png"} // Handle missing image URLs
         alt={user.name}
         className="sUser__picture"
       />
