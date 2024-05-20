@@ -10,7 +10,7 @@
     display: flex;
     background-color: white;
     border-radius: 10px;
-    min-height: 600px;
+    height: 95vh;
     overflow: hidden;
 
     .left {
@@ -21,12 +21,13 @@
       background-size: cover;
       padding: 50px;
       display: flex;
+      width:20vw;
       flex-direction: column;
       gap: 30px;
       color: white;
 
       h1 {
-        font-size: 100px;
+        font-size: 90px;
         line-height: 100px;
       }
       
